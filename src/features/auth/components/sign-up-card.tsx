@@ -31,11 +31,22 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
 
   const onPasswordSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      setError("Passwords don't match");
+      return;
+    }
+    setPending(true);
+    signIn("password", { email, password, flow: "signUp" })
+      .catch(() => {
+        setError("Something went wrong.");
+      })
+      .finally(() => setPending(false));
   };
 
   const onProviderSignUp = (value: "github" | "google") => {
     setPending(true);
-    signIn(value, { flow: "signUp" }).finally(() => setPending(false));
+    signIn(value).finally(() => setPending(false));
   };
 
   return (
@@ -53,7 +64,7 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
         </div>
       )}
       <CardContent className="space-y-5 px-0 pb-0">
-        <form className="space-y-2.5">
+        <form onSubmit={onPasswordSignUp} className="space-y-2.5">
           <Input
             disabled={pending}
             value={email}
