@@ -1,13 +1,13 @@
 import { useMutation } from "convex/react";
 
-import { useApiMutationHook } from "@/hooks/use-api-mutation";
 import { api } from "~convex/_generated/api";
 import { Id } from "~convex/_generated/dataModel";
+import { useApiMutationHook } from "@/hooks/use-api-mutation";
 
-type RequestType = { name: string };
+type RequestType = { id: Id<"workspaces">; name: string };
 type ResponseType = Id<"workspaces"> | null;
 
-export const useCreateWorkspace = () => {
-  const mutation = useMutation(api.workspaces.create);
+export const useUpdateWorkspace = () => {
+  const mutation = useMutation(api.workspaces.update);
   return useApiMutationHook<RequestType, ResponseType>(mutation);
 };
