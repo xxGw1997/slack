@@ -26,7 +26,7 @@ interface PreferencesProps {
   initialValue: string;
 }
 
-const PreferencesModal = ({
+export const PreferencesModal = ({
   open,
   setOpen,
   initialValue,
@@ -142,5 +142,3 @@ const PreferencesModal = ({
     </>
   );
 };
-
-export default PreferencesModal;

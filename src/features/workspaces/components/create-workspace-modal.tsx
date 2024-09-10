@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useCreateWorkspaceModal } from "../store/use-create-workspace-modal";
 import { useCreateWorkspace } from "../api/use-create-workspace";
 
-const CreateWorkspaceModal = () => {
+export const CreateWorkspaceModal = () => {
   const router = useRouter();
   const [open, setOpen] = useCreateWorkspaceModal();
   const [name, setName] = useState("");
@@ -66,5 +66,3 @@ const CreateWorkspaceModal = () => {
     </Dialog>
   );
 };
-
-export default CreateWorkspaceModal;
