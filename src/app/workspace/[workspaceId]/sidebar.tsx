@@ -30,7 +30,7 @@ export const Sidebar = () => {
         label="More"
         isActive={pathname.includes("/workspace")}
       />
-      <div className="flex flex-col items-center justify-center gap-y-1 mt-auto">
+      <div className="flex flex-col items-center justify-center gap-y-1 mt-auto mb-2">
         <UserButton />
       </div>
     </aside>
