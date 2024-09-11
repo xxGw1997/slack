@@ -87,7 +87,7 @@ export const PreferencesModal = ({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="p-0 bg-gray-50 overflow-hidden">
           <DialogHeader className="p-4 border-b bg-white">
-            <DialogTitle>{value}</DialogTitle>
+            <DialogTitle>{initialValue}</DialogTitle>
           </DialogHeader>
           <div className="px-4 pb-4 flex flex-col gap-y-2">
             <Dialog open={editOpen} onOpenChange={setEditOpen}>
@@ -99,7 +99,7 @@ export const PreferencesModal = ({
                       Edit
                     </p>
                   </div>
-                  <p className="text-sm">{value}</p>
+                  <p className="text-sm">{initialValue}</p>
                 </div>
               </DialogTrigger>
               <DialogContent>

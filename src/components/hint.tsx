@@ -12,12 +12,19 @@ interface HintProps {
   children: React.ReactNode;
   side?: "top" | "right" | "bottom" | "left";
   align?: "start" | "center" | "end";
+  delayDuration?: number;
 }
 
-export const Hint = ({ label, children, side, align }: HintProps) => {
+export const Hint = ({
+  label,
+  children,
+  side,
+  align,
+  delayDuration = 50,
+}: HintProps) => {
   return (
     <TooltipProvider>
-      <Tooltip delayDuration={50}>
+      <Tooltip delayDuration={delayDuration}>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent
           side={side}
