@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { useUpdateChannel } from "@/features/channels/api/use-update-channel";
 import { useRemoveChannel } from "@/features/channels/api/use-remove-channel";
+import { useCurrentMember } from "@/features/members/api/use-current-member";
 
 import { useChannelId } from "@/hooks/use-channel-id";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
@@ -31,6 +32,7 @@ export const Header = ({ title }: HeaderProp) => {
   const router = useRouter();
   const channelId = useChannelId();
   const workspaceId = useWorkspaceId();
+
   const [value, setValue] = useState(title);
   const [editOpen, setEditOpen] = useState(false);
 
@@ -39,10 +41,18 @@ export const Header = ({ title }: HeaderProp) => {
     "You are about to delete this channel. This action is irreversible"
   );
 
+  const { data: member } = useCurrentMember({ workspaceId });
+
   const { mutate: updateChannel, isPending: isUpdatingChannel } =
     useUpdateChannel();
   const { mutate: removeChannel, isPending: isRemovingChannel } =
     useRemoveChannel();
+
+  const handleOpen = (value: boolean) => {
+    if (member?.role !== "admin") return;
+
+    setEditOpen(value);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\s+/g, "-").toLowerCase();
@@ -106,14 +116,16 @@ export const Header = ({ title }: HeaderProp) => {
             <DialogTitle># {title}</DialogTitle>
           </DialogHeader>
           <div className="px-4 pb-4 flex flex-col gap-y-2">
-            <Dialog open={editOpen} onOpenChange={setEditOpen}>
+            <Dialog open={editOpen} onOpenChange={handleOpen}>
               <DialogTrigger asChild>
                 <div className="px-5 py-4 bg-white rounded-lg border cursor-pointer hover:bg-gray-50">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-semibold">Channel name</p>
-                    <p className="text-sm text-[#1265A3] hover:underline font-semibold">
-                      Edit
-                    </p>
+                    {member?.role === "admin" && (
+                      <p className="text-sm text-[#1265A3] hover:underline font-semibold">
+                        Edit
+                      </p>
+                    )}
                   </div>
                   <p className="text-sm"># {title}</p>
                 </div>
@@ -145,14 +157,16 @@ export const Header = ({ title }: HeaderProp) => {
                 </form>
               </DialogContent>
             </Dialog>
-            <button
-              onClick={handleRemove}
-              disabled={isRemovingChannel}
-              className="flex items-center gap-x-2 px-5 py-4 bg-white rounded-lg cursor-pointer border hover:bg-gray-50  text-rose-600"
-            >
-              <TrashIcon className="size-4" />
-              <p className="text-sm font-semibold">Delete channel</p>
-            </button>
+            {member?.role === "admin" && (
+              <button
+                onClick={handleRemove}
+                disabled={isRemovingChannel}
+                className="flex items-center gap-x-2 px-5 py-4 bg-white rounded-lg cursor-pointer border hover:bg-gray-50  text-rose-600"
+              >
+                <TrashIcon className="size-4" />
+                <p className="text-sm font-semibold">Delete channel</p>
+              </button>
+            )}
           </div>
         </DialogContent>
       </Dialog>
