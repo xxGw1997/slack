@@ -24,10 +24,17 @@ export const create = mutation({
     workspaceId: v.id("workspaces"),
     channelId: v.optional(v.id("channels")),
     parentMessageId: v.optional(v.id("messages")),
-    // TODO: Add Conversation ID
+    conversationId: v.optional(v.id("conversations")),
   },
   handler: async (ctx, args) => {
-    const { body, image, workspaceId, channelId, parentMessageId } = args;
+    const {
+      body,
+      image,
+      workspaceId,
+      channelId,
+      parentMessageId,
+      conversationId,
+    } = args;
 
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Unauthorized");
@@ -36,7 +43,15 @@ export const create = mutation({
 
     if (!member) throw new Error("Unauthorized");
 
-    // TODO: Handle conversationId
+    let _conversationId = conversationId;
+    // 只有在回复1对1对话时，才出现的情况
+    if (!_conversationId && !channelId && parentMessageId) {
+      const parentMessage = await ctx.db.get(parentMessageId);
+
+      if (!parentMessage) throw new Error("Parent message not found");
+
+      _conversationId = parentMessage.conversationId;
+    }
 
     const messageId = await ctx.db.insert("messages", {
       body,
@@ -44,6 +59,7 @@ export const create = mutation({
       memberId: member._id,
       workspaceId,
       channelId,
+      conversationId: _conversationId,
       parentMessageId,
       updatedAt: Date.now(),
     });
