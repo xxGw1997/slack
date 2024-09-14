@@ -46,7 +46,6 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
     try {
       setIsPending(true);
       editorRef.current?.enable(false);
-
       const values: CreateMessageValues = {
         channelId,
         workspaceId,

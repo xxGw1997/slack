@@ -95,6 +95,7 @@ const Editor = ({
                 if (isEmpty) return;
 
                 const body = JSON.stringify(quill.getContents());
+
                 submitRef.current?.({ image: addedImage, body });
               },
             },
