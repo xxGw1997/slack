@@ -58,6 +58,58 @@ const getMember = async (
     .unique();
 };
 
+export const remove = mutation({
+  args: {
+    id: v.id("messages"),
+  },
+  handler: async (ctx, { id }) => {
+    const userId = await getAuthUserId(ctx);
+
+    if (!userId) throw new Error("Unauthorized");
+
+    const message = await ctx.db.get(id);
+
+    if (!message) throw new Error("Message not found");
+
+    const member = await getMember(ctx, message.workspaceId, userId);
+
+    if (!member || member._id !== message.memberId)
+      throw new Error("Unauthorized");
+
+    await ctx.db.delete(id);
+
+    return id;
+  },
+});
+
+export const update = mutation({
+  args: {
+    id: v.id("messages"),
+    body: v.string(),
+  },
+  handler: async (ctx, { id, body }) => {
+    const userId = await getAuthUserId(ctx);
+
+    if (!userId) throw new Error("Unauthorized");
+
+    const message = await ctx.db.get(id);
+
+    if (!message) throw new Error("Message not found");
+
+    const member = await getMember(ctx, message.workspaceId, userId);
+
+    if (!member || member._id !== message.memberId)
+      throw new Error("Unauthorized");
+
+    await ctx.db.patch(id, {
+      body,
+      updatedAt: Date.now(),
+    });
+
+    return id;
+  },
+});
+
 export const get = query({
   args: {
     channelId: v.optional(v.id("channels")),
