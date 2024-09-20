@@ -14,12 +14,13 @@ const populateThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
     .collect();
 
   if (messages.length === 0)
-    return { count: 0, image: undefined, timestamp: 0 };
+    return { count: 0, image: undefined, timestamp: 0, name: "" };
 
   const lastMessage = messages[messages.length - 1];
   const lastMessageMember = await populateMember(ctx, lastMessage.memberId);
 
-  if (!lastMessageMember) return { count: 0, image: undefined, timestamp: 0 };
+  if (!lastMessageMember)
+    return { count: 0, image: undefined, timestamp: 0, name: "" };
 
   const lastMessageUser = await populateUser(ctx, lastMessageMember.userId);
 
@@ -27,6 +28,7 @@ const populateThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
     count: messages.length,
     image: lastMessageUser?.image,
     timestamp: lastMessage._creationTime,
+    name: lastMessageUser?.name,
   };
 };
 
@@ -267,6 +269,7 @@ export const get = query({
               reactions: reactionsWithoutMemberIdProperty,
               threadCount: thread.count,
               threadImage: thread.image,
+              threadName: thread.name,
               threadTimestamp: thread.timestamp,
             };
           })
