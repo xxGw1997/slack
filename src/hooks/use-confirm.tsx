@@ -12,7 +12,8 @@ import {
 
 export const useConfirm = (
   title: string,
-  message: string
+  message: string,
+  confirmVariant: "destructive" | "default" = "destructive"
 ): [() => JSX.Element, () => Promise<unknown>] => {
   const [promise, setPromise] = useState<{
     resolve: (value: boolean) => void;
@@ -47,7 +48,7 @@ export const useConfirm = (
           <Button onClick={handleCancel} variant="outline">
             Cancel
           </Button>
-          <Button onClick={handleConfirm} variant="destructive">
+          <Button onClick={handleConfirm} variant={confirmVariant}>
             Confirm
           </Button>
         </DialogFooter>
