@@ -27,9 +27,8 @@ import {
   DropdownMenuContent,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
+  DropdownMenuRadioGroup
 } from "@/components/ui/dropdown-menu";
-import { DropdownMenuRadioGroup } from "@radix-ui/react-dropdown-menu";
-
 interface ProfileProps {
   memberId: Id<"members">;
   onClose: () => void;
